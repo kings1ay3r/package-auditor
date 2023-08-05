@@ -1,26 +1,13 @@
 const fs = require('fs');
-const copyPaste = require('copy-paste');
 const { spin } = require('./spin');
-const { clearLastLine } = require('./clearLastLine');
-const { getPackageInfo } = require('./getPackageInfo');
-const { isValidPackageJson } = require('./isValidPackageJson');
-const { getEmptySpaces } = require('./getEmptySpaces');
+const { clearLastLine } = require('./utils/clearLastLine');
+const { getPackageInfo } = require('./utils/getPackageInfo');
+const { isValidPackageJson } = require('./utils/isValidPackageJson');
+const { getEmptySpaces } = require('./utils/getEmptySpaces');
 
 
-const { unparse } = require('papaparse');
-
-// Function to convert an array of objects to CSV
-function convertArrayToCSV(arrayData) {
-  // Create the CSV string using papaparse
-  const csvString = unparse(arrayData);
-
-  return csvString;
-}
-
-function copyToClipboard(text) {
-  copyPaste.copy(text);
-}
-
+const { copyToClipboard } = require('./wrappers/copyToClipboard');
+const { convertArrayToCSV } = require('./wrappers/convertArrayToCSV');
 
 function run() {
 
