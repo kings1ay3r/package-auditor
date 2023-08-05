@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { spin } = require('./spin');
+const { spin } = require('./utils/spin');
 const { clearLastLine } = require('./utils/clearLastLine');
 const { getPackageInfo } = require('./utils/getPackageInfo');
 const { isValidPackageJson } = require('./utils/isValidPackageJson');
@@ -60,7 +60,7 @@ function run() {
             console.log(getEmptySpaces(75, '-'));
 
             copyToClipboard(convertArrayToCSV(parsedData))
-            console.log("\n CSV Data Copied to Clipboard")
+            console.log("\n CSV Data Copied to Clipboard.")
             console.log(getEmptySpaces(75, '='));
 
         } catch (error) {
