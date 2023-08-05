@@ -6,8 +6,8 @@ async function getPackageInfo(pkgInfo) {
         const response = await axios.get(`${NPM_BASEPATH}${pkgInfo.pkg}`);
         const returnData = {
             name: pkgInfo.pkg,
-            currVer: pkgInfo.version,
-            latVer: response.data['dist-tags'].latest,
+            currentVersion: pkgInfo.version,
+            latestVersion: response.data['dist-tags'].latest,
             license: response.data.license
         };
         return returnData;

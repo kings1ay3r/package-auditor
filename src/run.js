@@ -1,9 +1,26 @@
 const fs = require('fs');
+const copyPaste = require('copy-paste');
 const { spin } = require('./spin');
 const { clearLastLine } = require('./clearLastLine');
 const { getPackageInfo } = require('./getPackageInfo');
 const { isValidPackageJson } = require('./isValidPackageJson');
 const { getEmptySpaces } = require('./getEmptySpaces');
+
+
+const { unparse } = require('papaparse');
+
+// Function to convert an array of objects to CSV
+function convertArrayToCSV(arrayData) {
+  // Create the CSV string using papaparse
+  const csvString = unparse(arrayData);
+
+  return csvString;
+}
+
+function copyToClipboard(text) {
+  copyPaste.copy(text);
+}
+
 
 function run() {
 
@@ -47,13 +64,17 @@ function run() {
             console.log("| Package Name" + getEmptySpaces(12) + "| Version" + getEmptySpaces(3) + "| Latest Version" + getEmptySpaces(1) + "| license");
             console.log(getEmptySpaces(75, '='));
             parsedData.map(item => {
-                const { name, latVer, currVer, license } = item;
+                const { name, latestVersion, currentVersion, license } = item;
                 const namePadLength = 26 - name.length;
-                const latVerPadLength = 18 - latVer.length;
-                const currVerPadLength = 12 - currVer.length;
-                console.log("+ " + name + getEmptySpaces(namePadLength) + currVer + getEmptySpaces(currVerPadLength) + latVer + getEmptySpaces(latVerPadLength) + license);
+                const latestVersionPadLength = 18 - latestVersion.length;
+                const currentVersionPadLength = 12 - currentVersion.length;
+                console.log("+ " + name + getEmptySpaces(namePadLength) + currentVersion + getEmptySpaces(currentVersionPadLength) + latestVersion + getEmptySpaces(latestVersionPadLength) + license);
             });
             console.log(getEmptySpaces(75, '-'));
+
+            copyToClipboard(convertArrayToCSV(parsedData))
+            console.log("\n CSV Data Copied to Clipboard")
+            console.log(getEmptySpaces(75, '='));
 
         } catch (error) {
             console.error('Error parsing the package.json file:', error.message);
