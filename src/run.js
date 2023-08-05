@@ -47,21 +47,21 @@ function run() {
             clearLastLine();
 
 
-            console.log(getEmptySpaces(75, '='));
-            console.log("| Package Name" + getEmptySpaces(12) + "| Version" + getEmptySpaces(3) + "| Latest Version" + getEmptySpaces(1) + "| license");
-            console.log(getEmptySpaces(75, '='));
+            console.log(getEmptySpaces(100, '='));
+            console.log("| Package Name" + getEmptySpaces(32) + "| Version" + getEmptySpaces(13) + "| Latest Version" + getEmptySpaces(1) + "| license");
+            console.log(getEmptySpaces(100, '='));
             parsedData.map(item => {
                 const { name, latestVersion, currentVersion, license } = item;
-                const namePadLength = 26 - name.length;
+                const namePadLength = 46 - name.length;
                 const latestVersionPadLength = 18 - latestVersion.length;
-                const currentVersionPadLength = 12 - currentVersion.length;
-                console.log("+ " + name + getEmptySpaces(namePadLength) + currentVersion + getEmptySpaces(currentVersionPadLength) + latestVersion + getEmptySpaces(latestVersionPadLength) + license);
+                const currentVersionPadLength = 22 - currentVersion.length;
+                console.log("+ " + name.substring(0,45) + getEmptySpaces(namePadLength) + currentVersion.substring(0,21) + getEmptySpaces(currentVersionPadLength) + latestVersion.substring(0,17) + getEmptySpaces(latestVersionPadLength) + license.substring(0,20));
             });
-            console.log(getEmptySpaces(75, '-'));
+            console.log(getEmptySpaces(100, '-'));
 
             copyToClipboard(convertArrayToCSV(parsedData))
             console.log("\n CSV Data Copied to Clipboard")
-            console.log(getEmptySpaces(75, '='));
+            console.log(getEmptySpaces(100, '='));
 
         } catch (error) {
             console.error('Error parsing the package.json file:', error.message);

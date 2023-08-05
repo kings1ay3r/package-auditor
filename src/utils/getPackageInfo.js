@@ -13,6 +13,12 @@ async function getPackageInfo(pkgInfo) {
         return returnData;
     } catch (error) {
         console.error(`Error fetching information for package ${pkgInfo.pkg}:`, error.message);
+        return {
+            name: pkgInfo.pkg,
+            currentVersion: pkgInfo.version,
+            latestVersion: "",
+            license: ""
+        }
     }
 }
 exports.getPackageInfo = getPackageInfo;
