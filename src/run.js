@@ -8,17 +8,9 @@ const { getEmptySpaces } = require('./utils/getEmptySpaces');
 
 const { copyToClipboard } = require('./wrappers/copyToClipboard');
 const { convertArrayToCSV } = require('./wrappers/convertArrayToCSV');
+const { json } = require('stream/consumers');
 
-function run() {
-
-
-    if (process.argv.length < 3) {
-        console.error('Error: Please provide the file name as a command-line argument.');
-        process.exit(1);
-    }
-
-    const fileName = process.argv[2];
-    fs.readFile(fileName, 'utf8', async (err, data) => {
+const processFile = async (err, data) => {
         if (err) {
             console.error('Error reading the file:', err);
             process.exit(1);
@@ -45,16 +37,19 @@ function run() {
             const parsedData = await Promise.all(Object.values(promiseArray));
             clearInterval(interval);
             clearLastLine();
+            console.log(parsedData)
 
 
             console.log(getEmptySpaces(100, '='));
             console.log("| Package Name" + getEmptySpaces(32) + "| Version" + getEmptySpaces(13) + "| Latest Version" + getEmptySpaces(1) + "| license");
             console.log(getEmptySpaces(100, '='));
             parsedData.map(item => {
-                const { name, latestVersion, currentVersion, license } = item;
+                let { name, latestVersion, currentVersion, license } = item;
                 const namePadLength = 46 - name.length;
                 const latestVersionPadLength = 18 - latestVersion.length;
                 const currentVersionPadLength = 22 - currentVersion.length;
+                latestVersion = latestVersion == undefined?" ":latestVersion
+                license = license == undefined?" ":license
                 console.log("+ " + name.substring(0,45) + getEmptySpaces(namePadLength) + currentVersion.substring(0,21) + getEmptySpaces(currentVersionPadLength) + latestVersion.substring(0,17) + getEmptySpaces(latestVersionPadLength) + license.substring(0,20));
             });
             console.log(getEmptySpaces(100, '-'));
@@ -62,10 +57,24 @@ function run() {
             copyToClipboard(convertArrayToCSV(parsedData))
             console.log("\n CSV Data Copied to Clipboard.")
             console.log(getEmptySpaces(75, '='));
+            return convertArrayToCSV(parsedData)
 
         } catch (error) {
-            console.error('Error parsing the package.json file:', error.message);
+            console.error('Error parsing the package.json file:', error);
+            return error
         }
-    });
+    }
+
+function run() {
+
+
+    if (process.argv.length < 3) {
+        console.error('Error: Please provide the file name as a command-line argument.');
+        process.exit(1);
+    }
+
+    const fileName = process.argv[2];
+    fs.readFile(fileName, 'utf8', processFile);
 }
 exports.run = run;
+exports.processFile = processFile
